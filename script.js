@@ -1,244 +1,238 @@
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+'use strict';
 
-// Active navigation on scroll
-window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= (sectionTop - 100)) {
-            current = section.getAttribute('id');
-        }
-    });
+// ===== Navigation and scroll animations =====
+const header = document.querySelector('.site-header');
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.main-nav');
+const navLinks = [...document.querySelectorAll('.nav-link')];
+const sections = [...document.querySelectorAll('main section[id]')];
 
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
+function updateHeader() { header.classList.toggle('scrolled', window.scrollY > 24); }
+window.addEventListener('scroll', updateHeader, { passive: true });
+updateHeader();
 
-// Piano key animation on click
-document.querySelectorAll('.key').forEach(key => {
-    key.addEventListener('click', function() {
-        this.style.transform = 'translateY(5px)';
-        setTimeout(() => {
-            this.style.transform = 'translateY(0)';
-        }, 150);
-    });
-});
-
-// Video stats counter animation
-function animateCounter(element, target) {
-    let current = 0;
-    const increment = target / 50;
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = formatNumber(target);
-            clearInterval(timer);
-        } else {
-            element.textContent = formatNumber(Math.floor(current));
-        }
-    }, 20);
+function closeMenu() {
+  nav.classList.remove('is-open');
+  menuToggle.setAttribute('aria-expanded', 'false');
+  menuToggle.setAttribute('aria-label', 'Mở menu');
 }
+menuToggle.addEventListener('click', () => {
+  const isOpen = nav.classList.toggle('is-open');
+  menuToggle.setAttribute('aria-expanded', String(isOpen));
+  menuToggle.setAttribute('aria-label', isOpen ? 'Đóng menu' : 'Mở menu');
+});
+document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => closeMenu()));
+window.addEventListener('resize', () => { if (window.innerWidth > 760) closeMenu(); });
 
-function formatNumber(num) {
-    if (num >= 1000) {
-        return (num / 1000).toFixed(1) + 'K';
-    }
-    return num;
-}
-
-// Lazy loading animation for video cards
-const observerOptions = {
-    threshold: 0.1
-};
-
-const observer = new IntersectionObserver((entries) => {
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+      if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
     });
-}, observerOptions);
+  }, { threshold: 0.08 });
+  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
 
-document.querySelectorAll('.video-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = 'all 0.6s ease';
-    observer.observe(card);
-});
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(section => navObserver.observe(section));
+} else {
+  document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
+}
 
-
-// Dữ liệu bài hát (Bạn có thể thêm bớt bài hát tại đây)
+// ===== Original song lists, preserved from the previous website =====
 const songData = {
-    classical: [
-        "Für Elise - Beethoven",
-        "Moonlight Sonata (1st Movement) - Beethoven",
-        "Canon in D - Pachelbel",
-        "Turkish March - Mozart",
-        "Mariage d'Amour - Paul de Senneville",
-        "Hugarian Sonata - Paul de Senneville",
-        "Nocturne in C Sharp Minor - Chopin",
-        "Waltz in A Minor - Chopin",
-        "Carmen Habenera - Bizet",
-
-    ],
-    ballad: [
-        "Can't Help Falling in Love - Elvis Presley",
-        "My Heart Will Go On - James Horner & Will Jennings - Titanic(Celine Dion)",
-        "Kiss The Rain - Yiruma",
-        "River Flows in You - Yiruma",
-        "Proud of You - Fiona Fung",
-         "One Summer's Day - Joe Hisaishi - Spirited Away(Piano Version)"
-
-    ],
-    pop: [
-        "Perfect - Ed Sheeran",
-        "Until I Found You - Stephen Sanchez",
-        "Someone You Loved - Lewis Capaldi",
-        "I think they call this love - Ellot James Reay"
-
-    ],
-    
-    jazz: [
-        "Fly Me To The Moon",
-        "Jingle Bells",
-        "Merry go round of life - Joe Hisaishi - Howl's Moving Castle(Piano Version)",
-        "Take Five",
-        "What a Wonderful World"
-    ]
+  classical: [
+    'Für Elise - Beethoven',
+    'Moonlight Sonata (1st Movement) - Beethoven',
+    'Canon in D - Pachelbel',
+    'Turkish March - Mozart',
+    "Mariage d'Amour - Paul de Senneville",
+    'Hugarian Sonata - Paul de Senneville',
+    'Nocturne in C Sharp Minor - Chopin',
+    'Waltz in A Minor - Chopin',
+    'Carmen Habenera - Bizet'
+  ],
+  ballad: [
+    "Can't Help Falling in Love - Elvis Presley",
+    'My Heart Will Go On - James Horner & Will Jennings - Titanic(Celine Dion)',
+    'Kiss The Rain - Yiruma',
+    'River Flows in You - Yiruma',
+    'Proud of You - Fiona Fung',
+    "One Summer's Day - Joe Hisaishi - Spirited Away(Piano Version)"
+  ],
+  pop: [
+    'Perfect - Ed Sheeran',
+    'Until I Found You - Stephen Sanchez',
+    'Someone You Loved - Lewis Capaldi',
+    'I think they call this love - Ellot James Reay'
+  ],
+  jazz: [
+    'Fly Me To The Moon',
+    'Jingle Bells',
+    "Merry go round of life - Joe Hisaishi - Howl's Moving Castle(Piano Version)",
+    'Take Five',
+    'What a Wonderful World'
+  ]
 };
+const genreLabels = { classical: 'Classical', ballad: 'Ballad', pop: 'Pop', jazz: 'Jazz' };
+const songModal = document.getElementById('songModal');
+const modalPanel = songModal.querySelector('.modal-panel');
+const closeModalButton = songModal.querySelector('.modal-close');
+const modalTitle = document.getElementById('modalTitle');
+const songList = document.getElementById('songList');
+let previouslyFocused = null;
 
-// Hàm mở Modal
 function openModal(style) {
-    const modal = document.getElementById("songModal");
-    const title = document.getElementById("modalTitle");
-    const list = document.getElementById("songList");
-
-    // Xóa danh sách cũ
-    list.innerHTML = "";
-
-    // Đặt tên tiêu đề (Viết hoa chữ cái đầu)
-    title.innerText = "Danh sách nhạc " + style.charAt(0).toUpperCase() + style.slice(1);
-
-    // Lấy danh sách bài hát từ dữ liệu
-    const songs = songData[style];
-
-    if (songs) {
-        songs.forEach(song => {
-            let li = document.createElement("li");
-            li.innerText = song;
-            list.appendChild(li);
-        });
-    } else {
-        list.innerHTML = "<li>Chưa có bài hát nào.</li>";
-    }
-
-    // Hiển thị Modal (dùng Flex để dễ canh giữa)
-    modal.style.display = "flex";
+  if (!Object.prototype.hasOwnProperty.call(songData, style)) return;
+  previouslyFocused = document.activeElement;
+  modalTitle.textContent = `Danh sách nhạc ${genreLabels[style]}`;
+  songList.replaceChildren();
+  songData[style].forEach(song => {
+    const item = document.createElement('li');
+    item.textContent = song;
+    songList.appendChild(item);
+  });
+  songModal.classList.add('is-open');
+  songModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  closeModalButton.focus();
 }
-
-// Hàm đóng Modal
 function closeModal() {
-    document.getElementById("songModal").style.display = "none";
+  if (!songModal.classList.contains('is-open')) return;
+  songModal.classList.remove('is-open');
+  songModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  previouslyFocused?.focus();
 }
-
-// Đóng Modal khi bấm ra ngoài vùng nội dung
-window.onclick = function(event) {
-    const modal = document.getElementById("songModal");
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-
-// --- VIRTUAL PIANO LOGIC ---
-
-// 1. Khởi tạo Audio Context (Bộ xử lý âm thanh của trình duyệt)
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-// 2. Tần số các nốt nhạc (Hz)
-const noteFrequencies = {
-    "C4": 261.63,
-    "Cs4": 277.18,
-    "D4": 293.66,
-    "Ds4": 311.13,
-    "E4": 329.63,
-    "F4": 349.23,
-    "Fs4": 369.99,
-    "G4": 392.00,
-    "Gs4": 415.30,
-    "A4": 440.00,
-    "As4": 466.16,
-    "B4": 493.88,
-    "C5": 523.25
-};
-
-function playSound(note) {
-    if (!audioCtx) return;
-
-    // Tạo bộ dao động (Oscillator) - tạo ra sóng âm
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    // Chọn loại sóng âm: 'triangle' nghe giống tiếng đàn piano điện tử nhất
-    oscillator.type = 'triangle'; 
-    oscillator.frequency.value = noteFrequencies[note];
-
-    // Hiệu ứng âm lượng (Giảm dần)
-    gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-
-    // Kết nối: Nguồn âm -> Bộ chỉnh âm -> Loa
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    // Phát âm thanh
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 1.5); // Tự tắt sau 1.5s
-}
-
-// 3. Xử lý sự kiện Click chuột / Chạm tay
-const keys = document.querySelectorAll(".key");
-
-keys.forEach(key => {
-    key.addEventListener("mousedown", () => {
-        const note = key.getAttribute("data-note");
-        playSound(note);
-        key.classList.add("active"); // Hiệu ứng lún phím
-        setTimeout(() => key.classList.remove("active"), 100);
-    });
+document.querySelectorAll('[data-genre]').forEach(btn => btn.addEventListener('click', () => openModal(btn.dataset.genre)));
+closeModalButton.addEventListener('click', closeModal);
+songModal.addEventListener('click', event => { if (event.target === songModal) closeModal(); });
+document.addEventListener('keydown', event => {
+  if (!songModal.classList.contains('is-open')) return;
+  if (event.key === 'Escape') closeModal();
+  if (event.key === 'Tab') { // keep focus within the dialog
+    const focusables = [...modalPanel.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')];
+    if (!focusables.length) { event.preventDefault(); modalPanel.focus(); return; }
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
 });
 
-// 4. Xử lý sự kiện Bàn phím máy tính
-document.addEventListener("keydown", (e) => {
-    if (e.repeat) return; // Chặn giữ phím liên tục
-    const keyChar = e.key.toLowerCase();
-    const keyElement = document.querySelector(`.key[data-key="${keyChar}"]`);
+// ===== Interactive piano: Web Audio API =====
+// AudioContext is created only after a user gesture (needed by mobile browsers).
+const frequencies = {
+  C4:261.63, Cs4:277.18, D4:293.66, Ds4:311.13, E4:329.63, F4:349.23,
+  Fs4:369.99, G4:392.00, Gs4:415.30, A4:440.00, As4:466.16, B4:493.88
+};
+const pianoKeys = [...document.querySelectorAll('.piano-key')];
+const keyByLetter = new Map(pianoKeys.map(key => [key.dataset.key, key]));
+const activeVoices = new Map();
+const activeInputs = new Map();
+let audioContext;
 
-    if (keyElement) {
-        const note = keyElement.getAttribute("data-note");
-        playSound(note);
-        keyElement.classList.add("active");
-        setTimeout(() => keyElement.classList.remove("active"), 100);
+function getAudioContext() {
+  if (!audioContext) {
+    const Context = window.AudioContext || window.webkitAudioContext;
+    if (!Context) return null;
+    audioContext = new Context();
+  }
+  if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+  return audioContext;
+}
+
+function startNote(key, inputId) {
+  if (!key || activeInputs.has(inputId)) return;
+  const note = key.dataset.note;
+  const frequency = frequencies[note];
+  if (!frequency) return;
+  activeInputs.set(inputId, key);
+  key.classList.add('active');
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  // Three softly decaying harmonics give a warmer tone than one oscillator.
+  const master = ctx.createGain();
+  const now = ctx.currentTime;
+  master.gain.setValueAtTime(0.0001, now);
+  master.gain.exponentialRampToValueAtTime(0.28, now + 0.015);
+  master.gain.exponentialRampToValueAtTime(0.095, now + 0.23);
+  master.gain.exponentialRampToValueAtTime(0.012, now + 2.1);
+  master.connect(ctx.destination);
+  const oscillators = [
+    { multiplier: 1, level: 0.62, type: 'triangle' },
+    { multiplier: 2, level: 0.18, type: 'sine' },
+    { multiplier: 3, level: 0.07, type: 'sine' }
+  ].map(harmonic => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = harmonic.type;
+    osc.frequency.value = frequency * harmonic.multiplier;
+    gain.gain.value = harmonic.level;
+    osc.connect(gain).connect(master);
+    osc.start(now);
+    osc.stop(now + 3);
+    return osc;
+  });
+  activeVoices.set(inputId, { master, oscillators, ctx });
+}
+function stopNote(inputId) {
+  const key = activeInputs.get(inputId);
+  if (!key) return;
+  activeInputs.delete(inputId);
+  if (![...activeInputs.values()].includes(key)) key.classList.remove('active');
+  const voice = activeVoices.get(inputId);
+  if (voice) {
+    const now = voice.ctx.currentTime;
+    voice.master.gain.cancelScheduledValues(now);
+    voice.master.gain.setValueAtTime(Math.max(voice.master.gain.value, 0.0001), now);
+    voice.master.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+    activeVoices.delete(inputId);
+  }
+}
+
+pianoKeys.forEach(key => {
+  key.addEventListener('pointerdown', event => {
+    if (event.button !== 0 && event.pointerType === 'mouse') return;
+    event.preventDefault();
+    key.setPointerCapture?.(event.pointerId);
+    startNote(key, `pointer-${event.pointerId}`);
+  });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => key.addEventListener(type, event => stopNote(`pointer-${event.pointerId}`)));
+  // Standard button keyboard activation (Enter/Space) for accessibility.
+  key.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); startNote(key, `button-${key.dataset.note}`);
     }
+  });
+  key.addEventListener('keyup', event => {
+    if (event.key === 'Enter' || event.key === ' ') stopNote(`button-${key.dataset.note}`);
+  });
+});
+
+document.addEventListener('keydown', event => {
+  if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) return;
+  if (songModal.classList.contains('is-open')) return;
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+  const letter = event.key.toLowerCase();
+  const key = keyByLetter.get(letter);
+  if (!key) return;
+  // Prevent triggering piano when using normal navigation or focused buttons.
+  if (document.activeElement.matches('button:not(.piano-key), a')) return;
+  startNote(key, `keyboard-${letter}`);
+});
+document.addEventListener('keyup', event => stopNote(`keyboard-${event.key.toLowerCase()}`));
+window.addEventListener('blur', () => [...activeInputs.keys()].forEach(stopNote));
+
+const labelToggle = document.querySelector('.key-label-toggle');
+const pianoShell = document.querySelector('.piano-shell');
+labelToggle.addEventListener('click', () => {
+  const hidden = pianoShell.classList.toggle('hide-key-labels');
+  labelToggle.setAttribute('aria-pressed', String(!hidden));
+  labelToggle.innerHTML = `<i class="fa-regular fa-keyboard" aria-hidden="true"></i> ${hidden ? 'Hiện ký tự phím' : 'Ẩn ký tự phím'}`;
 });
