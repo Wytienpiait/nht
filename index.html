@@ -370,111 +370,319 @@
           <button type="button" class="text-link" id="momentSongs">Xem những bản nhạc cho khoảnh khắc này <span class="ar" aria-hidden="true"></span></button>
         </div>
       </div>
+      
+      <div class="piano-sessions" data-reveal>
+
+          <div class="sessions-heading">
+              <span>THE PIANO SESSIONS</span>
+              <h3>Những giai điệu vượt thời gian</h3>
+              <p>Thưởng thức những màn độc tấu piano cổ điển.</p>
+          </div>
+
+          <div class="sessions-tracks">
+
+              <button type="button"
+                      class="session-track active"
+                      data-track="0"
+                      aria-pressed="true">
+
+                  <i class="fa-solid fa-music"></i>
+
+                  <span>
+                      <strong>Für Elise</strong>
+                      <small>Ludwig van Beethoven</small>
+                  </span>
+
+              </button>
+
+              <button type="button"
+                      class="session-track"
+                      data-track="1"
+                      aria-pressed="false">
+
+                  <i class="fa-solid fa-music"></i>
+
+                  <span>
+                      <strong>Turkish March</strong>
+                      <small>Wolfgang Amadeus Mozart</small>
+                  </span>
+
+              </button>
+
+          </div>
+
+          <div class="session-player">
+
+              <button type="button"
+                      id="sessionPlay"
+                      aria-label="Phát nhạc">
+                  <i class="fa-solid fa-play"></i>
+              </button>
+
+              <div class="session-progress">
+
+                  <input type="range"
+                        id="sessionSeek"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        value="0"
+                        aria-label="Tiến trình phát nhạc">
+
+                  <div class="session-time">
+                      <span id="sessionCurrent">0:00</span>
+                      <span id="sessionDuration">0:00</span>
+                  </div>
+
+              </div>
+
+              <i class="fa-solid fa-volume-high"
+                aria-hidden="true"></i>
+
+              <input type="range"
+                    id="sessionVolume"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.6"
+                    aria-label="Âm lượng">
+
+          </div>
+
+          <p id="sessionStatus" role="status"></p>
+
+          <audio id="sessionAudio" preload="metadata"></audio>
+
+          <div class="session-footer">
+              LIVE 3D PIANO PERFORMANCE
+              <small>Digital piano · Made by</small>
+          </div>
+
+      </div>
+
     </section>
 
-    <section class="mailbox-section section-pad" id="mailbox" aria-labelledby="mailbox-title">
-      <div class="container">
+   <section class="mailbox-section section-pad"
+         id="mailbox" aria-labelledby="mailbox-title">
+
+    <div class="container">
+
         <div class="section-heading centered" data-reveal>
-          <p class="eyebrow"><span class="eyebrow-line"></span> 05 / HỘP THƯ GIAI ĐIỆU <span class="eyebrow-line"></span></p>
-          <h2 class="section-title" id="mailbox-title">Gửi một bản nhạc cho <em>Huy Thiên</em></h2>
-          <p>Kể mình nghe tâm trạng của bạn, hoặc một người bạn muốn gửi tặng giai điệu. Mình sẽ chọn một bản nhạc và chơi tặng bạn.</p>
+
+            <p class="eyebrow">
+                <span class="eyebrow-line"></span>
+                05 / HỘP THƯ GIAI ĐIỆU
+                <span class="eyebrow-line"></span>
+            </p>
+
+            <h2 class="section-title" id="mailbox-title">
+                Gửi tâm tư, nhận lại <em>giai điệu</em>
+            </h2>
+
+            <p>
+                Có những cảm xúc thật khó để gọi thành tên,
+                có những tâm tư chẳng dễ dàng nói thành lời.
+                Nếu bạn đang mang trong lòng một niềm vui,
+                một nỗi buồn, một câu chuyện hay những tình cảm
+                chưa từng thổ lộ, hãy gửi chúng vào chiếc hộp thư
+                nhỏ này. Mình sẽ lắng nghe, lựa chọn một giai điệu
+                phù hợp và gửi lại bạn bằng những giai điệu Piano,
+                như một lời hồi đáp bằng âm nhạc.
+            </p>
+
         </div>
 
         <div class="mailbox-shell" data-reveal>
-          <div class="mailbox-flap" aria-hidden="true"><span>♬</span></div>
 
-          <form class="mailbox-form" id="mailboxForm">
-            <div class="letter-greeting">
-                <span>PRIVATE CORRESPONDENCE</span>
-                <h3>Gửi Huy Thiên,</h3>
-               
+            <div class="mailbox-flap" aria-hidden="true">
+                <span>♬</span>
             </div>
 
-            <fieldset class="mood-fieldset">
-              <legend>Hôm nay bạn đang cảm thấy…</legend>
-              <div class="mood-options">
-                <label class="mood-chip"><input type="radio" name="mood" value="Bình yên" required><span><i aria-hidden="true">☾</i>Bình yên</span></label>
-                <label class="mood-chip"><input type="radio" name="mood" value="Nhớ nhung" required><span><i aria-hidden="true">✧</i>Nhớ nhung</span></label>
-                <label class="mood-chip"><input type="radio" name="mood" value="Hạnh phúc" required><span><i aria-hidden="true">♪</i>Hạnh phúc</span></label>
-                <label class="mood-chip"><input type="radio" name="mood" value="Cần được an ủi" required><span><i aria-hidden="true">♡</i>Cần được an ủi</span></label>
-                <label class="mood-chip"><input type="radio" name="mood" value="Muốn tặng ai đó" required><span><i aria-hidden="true">✦</i>Muốn tặng ai đó</span></label>
-              </div>
-            </fieldset>
+            <form class="mailbox-form" id="mailboxForm">
 
-            <div class="field-row">
-              <div class="field">
-                <label for="mb-name">Tên của bạn</label>
-                <input type="text" id="mb-name" name="name" maxlength="60" autocomplete="given-name" placeholder="Bạn muốn mình gọi là gì?" required>
-                <small class="field-error" data-error-for="name" role="alert"></small>
-              </div>
-              <div class="field">
-                <label for="mb-song">Bài hát muốn nghe</label>
-                <input type="text" id="mb-song" name="song" maxlength="100" list="mb-song-suggestions" placeholder="Tên bài hát hoặc để mình chọn giúp" required>
-                <datalist id="mb-song-suggestions"></datalist>
-              </div>
+                <div class="letter-greeting">
+                    <span>PRIVATE CORRESPONDENCE</span>
+                    <h3>Gửi Huy Thiên,</h3>
+                </div>
+
+                <!-- TÊN NGƯỜI GỬI -->
+
+                <div class="field">
+                    <label for="mb-name">
+                        Tên của bạn
+                    </label>
+
+                    <input
+                        type="text"
+                        id="mb-name"
+                        name="name"
+                        maxlength="60"
+                        autocomplete="given-name"
+                        placeholder="Bạn muốn mình gọi là gì?"
+                        required
+                    >
+
+                    <small
+                        class="field-error"
+                        data-error-for="name"
+                        role="alert"
+                    ></small>
+                </div>
+
+                <!-- NỘI DUNG BỨC THƯ -->
+
+                <div class="field">
+                    <label for="mb-message">
+                        Lời nhắn gửi đến Thiên
+                    </label>
+
+                    <div class="letter-writing">
+
+                        <textarea
+                            id="mb-message"
+                            name="message"
+                            maxlength="600"
+                            placeholder="Hãy kể mình nghe câu chuyện của bạn..."
+                            required
+                        ></textarea>
+
+                        <!-- GIỮ NGUYÊN HIỆU ỨNG BÚT -->
+
+                        <svg
+                            id="writingPen"
+                            class="writing-pen"
+                            viewBox="0 0 90 90"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12 78 Q48 9 81 5 Q86 39 47 58 L30 63Z"
+                                fill="#ac8150"
+                                stroke="#60452f"
+                            />
+
+                            <path
+                                d="M9 85 L70 17 M31 55 L30 32 M46 40 L45 19
+                                   M48 42 L70 39 M32 59 L53 53"
+                                stroke="#60452f"
+                                stroke-width="1.8"
+                                fill="none"
+                            />
+                        </svg>
+
+                    </div>
+
+                    <div class="field-foot">
+
+                        <small
+                            class="field-error"
+                            data-error-for="message"
+                            role="alert"
+                        ></small>
+
+                        <small
+                            class="char-count"
+                            id="mb-count"
+                            aria-live="polite"
+                        >0 / 600</small>
+
+                    </div>
+                </div>
+
+                <!-- THÔNG TIN LIÊN HỆ -->
+
+                <div class="field">
+
+                    <label for="mb-contact">
+                        Cách để mình gửi lại bản đàn
+                    </label>
+
+                    <input
+                        type="text"
+                        id="mb-contact"
+                        name="contact"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="Email hoặc tên Instagram / Facebook"
+                        required
+                    >
+
+                </div>
+
+                <!-- CHỐNG SPAM -->
+
+                <div class="hp-field" aria-hidden="true">
+                    <label>
+                        Để trống
+                        <input
+                            type="text"
+                            name="_gotcha"
+                            tabindex="-1"
+                            autocomplete="off"
+                        >
+                    </label>
+                </div>
+
+                <!-- GỬI THƯ -->
+
+                <div class="mailbox-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-gold"
+                        id="mb-submit"
+                    >
+                        <i class="fa-regular fa-paper-plane"
+                           aria-hidden="true"></i>
+
+                        <span>Gửi vào hộp thư</span>
+                    </button>
+
+                    <p
+                        class="mailbox-status"
+                        id="mb-status"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+                </div>
+
+            </form>
+
+            <!-- GỬI THƯ THÀNH CÔNG -->
+
+            <div
+                class="mailbox-success"
+                id="mailboxSuccess"
+                hidden
+                tabindex="-1"
+            >
+
+                <span class="success-mark" aria-hidden="true">
+                    ♬
+                </span>
+
+                <h3>Thư của bạn đã đến nơi</h3>
+
+                <p id="mb-success-text">
+                    Cảm ơn bạn đã gửi gắm những tâm tư của mình.
+                    Hãy chờ một chút nhé, mình sẽ tìm một giai điệu
+                    dành riêng cho câu chuyện của bạn.
+                </p>
+
+                <button
+                    type="button"
+                    class="text-link"
+                    id="mb-again"
+                >
+                    Gửi thêm một lá thư nữa
+                    <span class="ar" aria-hidden="true"></span>
+                </button>
+
             </div>
 
-            <div class="field">
-              <label for="mb-message">Lời nhắn gửi đến Thiên</label>
-              <div class="letter-writing">
-
-                  <textarea
-                      id="mb-message"
-                      name="message"
-                      maxlength="500"
-                     
-                      required
-                  ></textarea>
-
-                  <svg
-                      id="writingPen"
-                      class="writing-pen"
-                      viewBox="0 0 90 90"
-                      aria-hidden="true"
-                  >
-                      <path
-                          d="M12 78 Q48 9 81 5 Q86 39 47 58 L30 63Z"
-                          fill="#ac8150"
-                          stroke="#60452f"
-                      />
-                      <path
-                          d="M9 85 L70 17 M31 55 L30 32 M46 40 L45 19
-                            M48 42 L70 39 M32 59 L53 53"
-                          stroke="#60452f"
-                          stroke-width="1.8"
-                          fill="none"
-                      />
-                  </svg>
-
-              </div>
-              <div class="field-foot"><small class="field-error" data-error-for="message" role="alert"></small><small class="char-count" id="mb-count" aria-live="polite">0 / 600</small></div>
-            </div>
-
-            <div class="field">
-              <label for="mb-contact">Cách để mình gửi lại bản đàn</label>
-              <input type="text" id="mb-contact" name="contact" maxlength="100" autocomplete="off" placeholder="Email hoặc tên Instagram / Facebook" required>
-            </div>
-
-            <!-- Chống spam: người thật sẽ không thấy ô này -->
-            <div class="hp-field" aria-hidden="true"><label>Để trống<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
-
-            <div class="mailbox-actions">
-              <button type="submit" class="btn btn-gold" id="mb-submit"><i class="fa-regular fa-paper-plane" aria-hidden="true"></i> <span>Gửi vào hộp thư</span></button>
-              <p class="mailbox-status" id="mb-status" role="status" aria-live="polite"></p>
-            </div>
-
-
-          </form>
-
-          <div class="mailbox-success" id="mailboxSuccess" hidden tabindex="-1">
-            <span class="success-mark" aria-hidden="true">♬</span>
-            <h3>Thư của bạn đã đến nơi</h3>
-            <p id="mb-success-text">Cảm ơn bạn đã chia sẻ. Mình sẽ đọc thư và chơi một bản nhạc thật dịu dàng gửi lại bạn.</p>
-            <button type="button" class="text-link" id="mb-again">Gửi thêm một lá thư nữa <span class="ar" aria-hidden="true"></span></button>
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
     <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><div class="container contact-inner" data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> 06 / KẾT NỐI <span class="eyebrow-line"></span></p><h2 class="section-title" id="contact-title">Âm nhạc kết nối <em>chúng ta</em></h2><p>Cảm ơn bạn đã ghé thăm không gian nhỏ này. 
        </p><div class="social-links"><a href="https://www.facebook.com/share/1EKw3BRnVE/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i> Facebook <span class="ar" aria-hidden="true"></span></a><a href="https://instagram.com/huythienpia_0710" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram <span class="ar" aria-hidden="true"></span></a></div></div></section>

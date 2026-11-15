@@ -1074,3 +1074,199 @@ body.cinematic-active {
         animation: none;
     }
 }
+
+
+/* ==========================================
+   THE PIANO SESSIONS
+   ========================================== */
+
+.piano-sessions {
+    max-width: 1080px;
+    margin: 45px auto 0;
+    padding: 32px;
+    border: 1px solid var(--line);
+
+    background: linear-gradient(
+        145deg, #201d17, #10100f
+    );
+
+    box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+}
+
+.sessions-heading {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.sessions-heading span {
+    color: var(--gold);
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+}
+
+.sessions-heading h3 {
+    font: 500 1.8rem var(--font-display);
+    margin: 12px 0;
+}
+
+.sessions-heading p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Danh sách bài hát */
+
+.sessions-tracks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.session-track {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 20px;
+
+    background: #151412;
+    border: 1px solid var(--line);
+    color: var(--text);
+
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.session-track i {
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+.session-track strong {
+    display: block;
+    font: 500 1.2rem var(--font-display);
+}
+
+.session-track small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 5px;
+}
+
+.session-track:hover,
+.session-track.active {
+    border-color: var(--gold);
+    background: rgba(215,183,124,0.08);
+}
+
+/* Điều khiển âm nhạc */
+
+.session-player {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+
+    color: var(--gold);
+}
+
+#sessionPlay {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+
+    background: var(--gold);
+    color: #10100f;
+
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#sessionPlay:hover {
+    background: var(--gold-light);
+    box-shadow: 0 0 20px rgba(215,183,124,0.3);
+}
+
+.session-progress {
+    flex: 1;
+    min-width: 0;
+}
+
+.session-player input[type="range"] {
+    accent-color: var(--gold);
+    cursor: pointer;
+}
+
+#sessionSeek {
+    width: 100%;
+}
+
+#sessionVolume {
+    width: 85px;
+}
+
+.session-time {
+    display: flex;
+    justify-content: space-between;
+
+    color: var(--muted);
+    font-size: 0.7rem;
+}
+
+#sessionStatus {
+    color: var(--gold);
+    font-size: 0.8rem;
+    margin: 10px 0 0;
+}
+
+.session-footer {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--gold);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+}
+
+.session-footer small {
+    display: block;
+    color: var(--muted);
+    margin-top: 5px;
+    letter-spacing: 0.06em;
+}
+
+/* Điện thoại */
+
+@media(max-width: 600px) {
+
+    .piano-sessions {
+        padding: 20px;
+    }
+
+    .sessions-tracks {
+        grid-template-columns: 1fr;
+    }
+
+    .session-player {
+        gap: 10px;
+    }
+
+    #sessionVolume {
+        width: 50px;
+    }
+
+    .sessions-heading h3 {
+        font-size: 1.4rem;
+    }
+}

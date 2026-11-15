@@ -150,21 +150,6 @@ const mbMessage = document.getElementById('mb-message');
 const mbCount = document.getElementById('mb-count');
 const mbSuccessText = document.getElementById('mb-success-text');
 
-// Gợi ý tên bài hát từ danh sách bài có sẵn
-const mbSuggestions = document.getElementById('mb-song-suggestions');
-[...new Set(Object.values(songData).flat())].forEach(song => {
-  const option = document.createElement('option');
-  option.value = song;
-  mbSuggestions.appendChild(option);
-});
-
-const moodReplies = {
-  'Bình yên': 'Mình sẽ chọn một giai điệu thật êm để bạn giữ lấy sự bình yên ấy.',
-  'Nhớ nhung': 'Có những điều chỉ có thể nói bằng tiếng đàn. Mình sẽ chơi một bản thật dịu dàng cho bạn.',
-  'Hạnh phúc': 'Vui quá! Mình sẽ chơi một bản nhạc để niềm vui này ngân dài thêm.',
-  'Cần được an ủi': 'Mình đã đọc thư của bạn. Hãy cứ nghỉ ngơi một chút, mình sẽ chơi một bản nhạc thật ấm áp gửi bạn.',
-  'Muốn tặng ai đó': 'Một món quà thật đẹp. Mình sẽ chơi bản nhạc này bằng tất cả tấm lòng.'
-};
 
 mbMessage.addEventListener('input', () => { mbCount.textContent = `${mbMessage.value.length} / ${mbMessage.maxLength}`; });
 
@@ -211,8 +196,9 @@ mailboxForm.addEventListener('submit', async event => {
       body: new FormData(mailboxForm)
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const mood = mailboxForm.elements.mood.value;
-    mbSuccessText.textContent = `Cảm ơn ${mailboxForm.elements.name.value.trim()} đã chia sẻ. ${moodReplies[mood] || 'Mình sẽ đọc thư và chơi một bản nhạc thật dịu dàng gửi lại bạn.'}`;
+    const senderName = mailboxForm.elements.name.value.trim();
+
+    mbSuccessText.textContent = `Cảm ơn ${senderName} đã gửi gắm những tâm tư của mình. Mình sẽ lựa chọn một giai điệu phù hợp với câu chuyện của bạn và gửi lại bằng tất cả sự chân thành.`;
     mailboxForm.hidden = true;
     mailboxSuccess.hidden = false;
     mailboxSuccess.focus();
@@ -500,4 +486,307 @@ melodyStories.forEach(story => {
             updatePenPosition();
         }
     });
+})();
+
+
+
+/* ==========================================
+   THE PIANO SESSIONS - AUDIO & MIDI SYNC
+   ========================================== */
+
+(() => {
+
+    const audio = document.getElementById("sessionAudio");
+    const playBtn = document.getElementById("sessionPlay");
+    const seek = document.getElementById("sessionSeek");
+    const volume = document.getElementById("sessionVolume");
+    const current = document.getElementById("sessionCurrent");
+    const duration = document.getElementById("sessionDuration");
+    const status = document.getElementById("sessionStatus");
+
+    const buttons = document.querySelectorAll(".session-track");
+
+    if (!audio || !playBtn) return;
+
+    const tracks = [
+        {
+            title: "Für Elise",
+            src: "audio/fur-elise.mp3",
+            notes: "audio/fur-elise.json"
+        },
+        {
+            title: "Turkish March",
+            src: "audio/turkish-march.mp3",
+            notes: "audio/turkish-march.json"
+        }
+    ];
+
+    let selectedTrack = 0;
+    let noteLoadVersion = 0;
+    let notesReady = Promise.resolve(false);
+    let playRequested = false;
+
+    audio.volume = 0.6;
+    audio.pianoNotes = [];
+
+    function formatTime(seconds) {
+
+        if (!Number.isFinite(seconds)) return "0:00";
+
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+
+        return `${mins}:${String(secs).padStart(2, "0")}`;
+    }
+
+    // Tải bài hát và dữ liệu nốt nhạc
+
+    function loadTrack(index) {
+
+        const version = ++noteLoadVersion;
+
+        selectedTrack = index;
+
+        audio.pause();
+        audio.pianoNotes = [];
+
+        audio.src = tracks[index].src;
+        audio.load();
+
+        seek.value = 0;
+        current.textContent = "0:00";
+        duration.textContent = "0:00";
+
+        status.textContent = "Đang chuẩn bị tác phẩm...";
+
+        buttons.forEach((btn, i) => {
+
+            btn.classList.toggle("active", i === index);
+
+            btn.setAttribute(
+                "aria-pressed",
+                String(i === index)
+            );
+        });
+
+        notesReady = (async () => {
+
+            try {
+
+                const response = await fetch(
+                    tracks[index].notes
+                );
+
+                if (!response.ok) {
+                    throw new Error("Không tải được JSON");
+                }
+
+                const notes = await response.json();
+
+                if (version !== noteLoadVersion) return false;
+
+                if (!Array.isArray(notes)) {
+                    throw new Error("Dữ liệu nốt không hợp lệ");
+                }
+
+                audio.pianoNotes = notes;
+
+                status.textContent = "";
+
+                return true;
+
+            } catch (error) {
+
+                if (version === noteLoadVersion) {
+                    status.textContent =
+                        "Không tải được dữ liệu phím đàn.";
+                }
+
+                console.error(error);
+
+                return false;
+            }
+
+        })();
+    }
+
+    // Phát nhạc
+
+    async function playMusic() {
+
+        const version = noteLoadVersion;
+        playRequested = true;
+
+        // Gọi play trực tiếp từ sự kiện click
+        // để hỗ trợ chính sách phát nhạc của trình duyệt.
+
+        try {
+
+            await audio.play();
+
+            const ready = await notesReady;
+
+            if (version !== noteLoadVersion) return;
+
+            if (!ready) {
+                audio.pause();
+                playRequested = false;
+                return;
+            }
+
+            if (!playRequested) return;
+
+            status.textContent = "Đang biểu diễn: " +
+                                 tracks[selectedTrack].title;
+
+        } catch (error) {
+
+            if (version !== noteLoadVersion) return;
+
+            playRequested = false;
+
+            status.textContent =
+                "Không thể phát nhạc. Hãy kiểm tra file MP3.";
+        }
+    }
+
+    // Cập nhật biểu tượng Play/Pause
+
+    function updatePlayButton() {
+
+        playBtn.innerHTML = audio.paused
+            ? '<i class="fa-solid fa-play"></i>'
+            : '<i class="fa-solid fa-pause"></i>';
+
+        playBtn.setAttribute(
+            "aria-label",
+            audio.paused ? "Phát nhạc" : "Tạm dừng"
+        );
+    }
+
+    // Chọn bài hát
+
+    buttons.forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            const index = Number(btn.dataset.track);
+
+            if (index !== selectedTrack) {
+                loadTrack(index);
+            }
+
+            playMusic();
+        });
+
+    });
+
+    // Nút Play/Pause
+
+    playBtn.addEventListener("click", () => {
+
+        if (audio.paused) {
+
+            playMusic();
+
+        } else {
+
+            playRequested = false;
+            audio.pause();
+
+            status.textContent = "Đã tạm dừng";
+        }
+    });
+
+    audio.addEventListener("play", updatePlayButton);
+    audio.addEventListener("pause", updatePlayButton);
+
+    // Thanh tiến trình phát nhạc
+
+    audio.addEventListener("timeupdate", () => {
+
+        if (audio.duration > 0) {
+
+            seek.value =
+                (audio.currentTime / audio.duration) * 100;
+        }
+
+        current.textContent = formatTime(audio.currentTime);
+    });
+
+    audio.addEventListener("loadedmetadata", () => {
+
+        duration.textContent = formatTime(audio.duration);
+    });
+
+    // Tua nhạc
+
+    seek.addEventListener("input", () => {
+
+        if (Number.isFinite(audio.duration)) {
+
+            audio.currentTime =
+                (Number(seek.value) / 100) * audio.duration;
+        }
+
+    });
+
+    // Âm lượng
+
+    volume.addEventListener("input", () => {
+
+        audio.volume = Number(volume.value);
+
+    });
+
+    // Kết thúc bài hát
+
+    audio.addEventListener("ended", () => {
+
+        playRequested = false;
+
+        updatePlayButton();
+
+        status.textContent = "Đã kết thúc tác phẩm.";
+
+    });
+
+    // Lỗi tải file âm thanh
+
+    audio.addEventListener("error", () => {
+
+        playRequested = false;
+
+        status.textContent = "Không tìm thấy file nhạc.";
+
+        updatePlayButton();
+    });
+
+    // Không phát video và nhạc cùng lúc
+
+    document.querySelectorAll("video").forEach(video => {
+
+        video.addEventListener("play", () => {
+
+            playRequested = false;
+            audio.pause();
+
+        });
+
+    });
+
+    audio.addEventListener("play", () => {
+
+        document.querySelectorAll("video").forEach(video => {
+
+            video.pause();
+
+        });
+
+    });
+
+    // Khởi tạo bài Für Elise, không tự động phát
+
+    loadTrack(0);
+
 })();

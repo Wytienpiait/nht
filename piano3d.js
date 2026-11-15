@@ -679,13 +679,73 @@ prop.quaternion.setFromUnitVectors(
       sway += (swayTarget - sway) * (1 - Math.exp(-dt * 1.6));
       swayAngle = Math.sin(now * 0.00042) * sway;
       updateCamera();
-      for (const key of keys) {
-        const d = key.target - key.press;
-        if (d !== 0) {
-          key.press = Math.abs(d) < 0.01 ? key.target : key.press + d * Math.min(1, dt * 26);
-          key.group.rotation.x = key.press * 0.05;
+      
+// ==========================================
+// MIDI - ĐỒNG BỘ PHÍM ĐÀN 3D
+// ==========================================
+
+const sessionAudio = document.getElementById(
+    "sessionAudio"
+);
+
+const activeMidi = new Set();
+
+if (
+    sessionAudio &&
+    !sessionAudio.paused &&
+    !sessionAudio.ended &&
+    !sessionAudio.seeking &&
+    Array.isArray(sessionAudio.pianoNotes)
+) {
+
+    const songTime = sessionAudio.currentTime;
+
+    for (const note of sessionAudio.pianoNotes) {
+
+        if (note.start > songTime) {
+            break;
         }
-      }
+
+        if (
+            songTime >= note.start &&
+            songTime < note.end
+        ) {
+
+            activeMidi.add(note.midi);
+
+        }
+    }
+}
+
+// Cập nhật chuyển động 88 phím đàn
+
+for (const key of keys) {
+
+    const autoPress = activeMidi.has(key.midi)
+        ? 1
+        : 0;
+
+    // Kết hợp phím tự động và phím chơi thủ công
+
+    const target = Math.max(
+        key.target,
+        autoPress
+    );
+
+    const difference = target - key.press;
+
+    if (difference !== 0) {
+
+        key.press = Math.abs(difference) < 0.01
+            ? target
+            : key.press +
+              difference * Math.min(1, dt * 35);
+
+        key.group.rotation.x = key.press * 0.05;
+
+    }
+}
+
     }
     function frame(now) {
       raf = 0;
