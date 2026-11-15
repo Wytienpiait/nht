@@ -12,7 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script defer src="script.js"></script>
+  <script defer src="piano3d.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Bỏ qua menu</a>
@@ -29,8 +31,9 @@
         <a class="nav-link active" href="#home">Trang chủ</a>
         <a class="nav-link" href="#about">Giới thiệu</a>
         <a class="nav-link" href="#videos">Tác phẩm</a>
-        <a class="nav-link" href="#virtual-piano">Piano</a>
-        <a class="nav-contact" href="#contact">Liên hệ <span aria-hidden="true">↗</span></a>
+        <a class="nav-link" href="#piano3d-section">Piano</a>
+        <a class="nav-link" href="#mailbox">Hộp thư</a>
+        <a class="nav-contact" href="#contact">Liên hệ <span class="ar" aria-hidden="true"></span></a>
       </nav>
     </div>
   </header>
@@ -46,7 +49,7 @@
           <p class="hero-lead">Chào mừng đến với không gian âm nhạc của Huy Thiên, nơi kể chuyện bằng những giai điệu Piano.</p>
           <div class="hero-actions">
             <a href="#videos" class="btn btn-gold"><i class="fa-solid fa-play" aria-hidden="true"></i> Khám phá tác phẩm</a>
-            <a href="#about" class="text-link">Câu chuyện của mình <span aria-hidden="true">↗</span></a>
+            <a href="#about" class="text-link">Câu chuyện của mình <span class="ar" aria-hidden="true"></span></a>
           </div>
           <p class="hero-note"><span aria-hidden="true">✦</span> Music is the language of the soul</p>
         </div>
@@ -72,26 +75,174 @@
           <p>Chào bạn, mình là Huy Thiên. Ban ngày, mình là một sinh viên của Trường Đại học Sư phạm TP.HCM với những giây phút bận rộn trong lớp học. Nhưng khi mọi ồn ào trong ngày khép lại, nơi duy nhất mình cảm thấy trọn vẹn nhất là bên cạnh những phím đàn.</p>
           <p>Lần đầu ngón tay chạm vào phím đàn Piano là năm lên sáu tuổi, khi chân còn chưa với tới bàn đạp của đàn. Đi qua ngần ấy năm, cây đàn không chỉ là sở thích, mà là nơi cất giữ những vui buồn không biết tỏ cùng ai. Mình chơi đàn không phải để biểu diễn, mà để chia sẻ những tâm tư, tình cảm bên trong mình. Hy vọng những giai điệu ở đây có thể chạm vào một góc bình yên nào đó bên trong bạn.</p>
           <div class="about-quote"><span aria-hidden="true">“</span><p>Mỗi phím đàn, một câu chuyện. Mỗi giai điệu, một cảm xúc.</p></div>
-          <a href="#contact" class="text-link">Kết nối cùng mình <span aria-hidden="true">↗</span></a>
+          <a href="#contact" class="text-link">Kết nối cùng mình <span class="ar" aria-hidden="true"></span></a>
         </div>
       </div>
     </section>
 
-    <section class="music-styles section-pad" id="styles" aria-labelledby="styles-title">
-      <div class="container">
+   
+<section class="melody-section section-pad" id="styles"
+         aria-labelledby="melody-title">
+
+    <div class="container">
+
         <div class="section-heading centered" data-reveal>
-          <p class="eyebrow"><span class="eyebrow-line"></span> 02 / GIAI ĐIỆU YÊU THÍCH <span class="eyebrow-line"></span></p>
-          <h2 class="section-title" id="styles-title">Những sắc màu <em>âm nhạc</em></h2>
-          <p>Chọn một phong cách để khám phá danh sách những bản nhạc mình yêu thích.</p>
+            <p class="eyebrow">
+                <span class="eyebrow-line"></span>
+                02 / Phía sau những giai điệu
+                <span class="eyebrow-line"></span>
+            </p>
+
+            <h2 class="section-title" id="melody-title">
+                Câu chuyện phía sau những <em>giai điệu</em>
+            </h2>
+
+            <p>
+                Có những cảm xúc chẳng thể gọi thành tên,
+                nhưng lại được kể trọn vẹn qua từng phím đàn.
+            </p>
         </div>
-        <div class="genre-grid">
-          <button class="genre-card" type="button" data-genre="classical" data-reveal><span class="genre-number">01</span><span class="genre-icon" aria-hidden="true">♩</span><strong>Classical</strong><small>Cổ điển và bất hủ</small><span class="genre-arrow" aria-hidden="true">↗</span></button>
-          <button class="genre-card" type="button" data-genre="ballad" data-reveal><span class="genre-number">02</span><span class="genre-icon" aria-hidden="true">♡</span><strong>Ballad</strong><small>Nhẹ nhàng và sâu lắng</small><span class="genre-arrow" aria-hidden="true">↗</span></button>
-          <button class="genre-card" type="button" data-genre="pop" data-reveal><span class="genre-number">03</span><span class="genre-icon" aria-hidden="true">✧</span><strong>Pop</strong><small>Gần gũi và hiện đại</small><span class="genre-arrow" aria-hidden="true">↗</span></button>
-          <button class="genre-card" type="button" data-genre="jazz" data-reveal><span class="genre-number">04</span><span class="genre-icon" aria-hidden="true">♫</span><strong>Jazz</strong><small>Phóng khoáng và cảm xúc</small><span class="genre-arrow" aria-hidden="true">↗</span></button>
+
+        <div class="melody-grid">
+
+            <!-- Tác phẩm 01 -->
+            <article class="melody-card" data-reveal>
+
+                <div class="melody-image">
+                    <img src="images/canon.jpg"
+                         alt="Bản nhạc cổ điển Canon in D"
+                         loading="lazy">
+                    <span class="melody-number">01</span>
+                </div>
+
+                <div class="melody-content">
+                    <span class="melody-category">
+                        TIMELESS / CLASSICAL
+                    </span>
+
+                    <h3>Canon in D</h3>
+
+                    <p class="melody-composer">
+                        Johann Pachelbel
+                    </p>
+
+                    <p class="melody-description">
+                        Có những giai điệu dù đã đi qua hàng thế kỷ
+                        vẫn khiến trái tim rung động như lần đầu.
+                    </p>
+
+                    <details class="melody-story">
+                        <summary>Khám phá câu chuyện</summary>
+
+                        <p>
+                            Canon in D mang một vẻ đẹp giản dị
+                            nhưng đầy tinh tế. Những âm thanh lặp lại
+                            và đan xen tạo nên cảm giác bình yên,
+                            gợi nhắc về sự gắn kết và những
+                            khoảnh khắc đẹp trong cuộc sống.
+                        </p>
+                    </details>
+                </div>
+            </article>
+
+            <!-- Tác phẩm 02 -->
+            <article class="melody-card" data-reveal>
+
+                <div class="melody-image">
+                    <img src="images/perfect.jpg"
+                         alt="Hoa hồng bên phím đàn piano"
+                         loading="lazy">
+                    <span class="melody-number">02</span>
+                </div>
+
+                <div class="melody-content">
+                    <span class="melody-category">
+                        ROMANCE / LOVE
+                    </span>
+
+                    <h3>Perfect</h3>
+
+                    <p class="melody-composer">
+                        Ed Sheeran
+                    </p>
+
+                    <p class="melody-description">
+                        Khi tình yêu không cần đến những lời hoa mỹ,
+                        chỉ cần một giai điệu chân thành.
+                    </p>
+
+                    <details class="melody-story">
+                        <summary>Khám phá câu chuyện</summary>
+
+                        <p>
+                            Khi được chuyển thể sang Piano,
+                            Perfect trở thành một lời tâm sự dịu dàng.
+                            Không còn lời hát, từng nốt nhạc vẫn đủ
+                            để truyền tải sự ấm áp, chân thành
+                            và vẻ đẹp của tình yêu.
+                        </p>
+                    </details>
+                </div>
+            </article>
+
+            <!-- Tác phẩm 03 -->
+            <article class="melody-card" data-reveal>
+
+                <div class="melody-image">
+                    <img src="images/summer.jpg"
+                         alt="Ánh nắng mùa hè bên cây đàn"
+                         loading="lazy">
+                    <span class="melody-number">03</span>
+                </div>
+
+                <div class="melody-content">
+                    <span class="melody-category">
+                        NOSTALGIA / CINEMA
+                    </span>
+
+                    <h3>One Summer's Day</h3>
+
+                    <p class="melody-composer">
+                        Joe Hisaishi
+                    </p>
+
+                    <p class="melody-description">
+                        Một miền ký ức dịu dàng,
+                        nơi thời gian dường như ngừng lại.
+                    </p>
+
+                    <details class="melody-story">
+                        <summary>Khám phá câu chuyện</summary>
+
+                        <p>
+                            Giai điệu từ Spirited Away mang theo
+                            sự trong trẻo, hoài niệm và một chút
+                            man mác buồn. Như thể âm nhạc đang
+                            mở ra cánh cửa dẫn về những ngày
+                            tháng vô tư đã qua.
+                        </p>
+                    </details>
+                </div>
+            </article>
+
         </div>
-      </div>
-    </section>
+
+        <div class="melody-footer" data-reveal>
+            <span class="melody-divider"></span>
+
+            <p>
+                Some stories are better told through music.
+            </p>
+
+            <a href="#videos" class="text-link">
+                Thưởng thức các tác phẩm
+                <span class="ar" aria-hidden="true"></span>
+            </a>
+        </div>
+
+    </div>
+</section>
+
 
     <section class="videos section-pad" id="videos" aria-labelledby="videos-title">
       <div class="container">
@@ -150,40 +301,189 @@
       </div>
     </section>
 
-    <section class="piano-section section-pad" id="virtual-piano" aria-labelledby="piano-title">
+    <section class="stage-section section-pad" id="piano3d-section" aria-labelledby="piano3d-title">
       <div class="container">
-        <div class="section-heading centered" data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> 04 / TRẢI NGHIỆM <span class="eyebrow-line"></span></p><h2 class="section-title" id="piano-title">Chạm vào <em>giai điệu</em></h2></div>
-        <div class="piano-shell hide-key-labels" data-reveal>
-          <div class="piano-top"><div class="piano-label">HUY THIEN <span>PIANO</span></div></div>
-          <div class="piano-scroll" aria-label="Có thể kéo ngang để xem đàn trên màn hình nhỏ">
-            <div class="piano-keyboard" role="group" aria-label="Bàn phím đàn piano">
-              <button type="button" class="piano-key white-key" data-note="C4" data-key="a" aria-label="Đô 4, phím A"><span>A</span></button>
-              <button type="button" class="piano-key white-key" data-note="D4" data-key="s" aria-label="Rê 4, phím S"><span>S</span></button>
-              <button type="button" class="piano-key white-key" data-note="E4" data-key="d" aria-label="Mi 4, phím D"><span>D</span></button>
-              <button type="button" class="piano-key white-key" data-note="F4" data-key="f" aria-label="Fa 4, phím F"><span>F</span></button>
-              <button type="button" class="piano-key white-key" data-note="G4" data-key="g" aria-label="Sol 4, phím G"><span>G</span></button>
-              <button type="button" class="piano-key white-key" data-note="A4" data-key="h" aria-label="La 4, phím H"><span>H</span></button>
-              <button type="button" class="piano-key white-key" data-note="B4" data-key="j" aria-label="Si 4, phím J"><span>J</span></button>
-              <button type="button" class="piano-key black-key" style="--black-position:1" data-note="Cs4" data-key="w" aria-label="Đô thăng 4, phím W"><span>W</span></button>
-              <button type="button" class="piano-key black-key" style="--black-position:2" data-note="Ds4" data-key="e" aria-label="Rê thăng 4, phím E"><span>E</span></button>
-              <button type="button" class="piano-key black-key" style="--black-position:4" data-note="Fs4" data-key="t" aria-label="Fa thăng 4, phím T"><span>T</span></button>
-              <button type="button" class="piano-key black-key" style="--black-position:5" data-note="Gs4" data-key="y" aria-label="Sol thăng 4, phím Y"><span>Y</span></button>
-              <button type="button" class="piano-key black-key" style="--black-position:6" data-note="As4" data-key="u" aria-label="La thăng 4, phím U"><span>U</span></button>
-            </div>
+        <div class="section-heading centered" data-reveal>
+          <p class="eyebrow"><span class="eyebrow-line"></span> 04 / CÂY ĐÀN CỦA MÌNH <span class="eyebrow-line"></span></p>
+          <h2 class="section-title" id="piano3d-title"><em>Cây đàn</em> của Huy Thiên</h2>
+          <p>Xoay quanh cây đàn, rồi chọn một khoảnh khắc trong ngày để xem cảm nhận cái đẹp của nghệ thuật.</p>
+        </div>
+
+        <div class="piano3d" id="piano3d" data-moment="morning" data-reveal>
+          <div class="piano3d-bg" aria-hidden="true"><i class="bg-morning"></i><i class="bg-rainy"></i><i class="bg-sunset"></i><i class="bg-night"></i></div>
+          <canvas id="pianoCanvas" tabindex="0" role="img" aria-label="Mô hình 3D cây đàn grand piano. Kéo để xoay, dùng phím mũi tên để đổi góc nhìn, chạm vào phím đàn để nghe tiếng."></canvas>
+          <div class="piano3d-rain" aria-hidden="true"></div>
+          <div class="piano3d-loading" aria-hidden="true"><span>ĐANG DỰNG CÂY ĐÀN…</span></div>
+          <div class="piano3d-fallback"><p>Trình duyệt của bạn chưa hiển thị được mô hình 3D.<br>Bạn vẫn có thể xem các video biểu diễn ở phía trên nhé.</p></div>
+          <div class="piano3d-tools" role="group" aria-label="Điều khiển góc nhìn">
+            
+            <button
+                type="button"
+                class="tool-btn"
+                id="cinematicEnter"
+                aria-label="Bật chế độ điện ảnh"
+                title="Cinematic Mode"
+              >
+                <i class="fa-solid fa-film" aria-hidden="true"></i>
+            </button>
           </div>
-          <div class="piano-bottom"><button class="key-label-toggle" type="button" aria-pressed="false"><i class="fa-regular fa-keyboard" aria-hidden="true"></i> Hiện ký tự phím</button></div>
+          <div class="cinematic-overlay" aria-hidden="true">
+          <div class="cinematic-top">
+            <div class="cinematic-brand">
+              <span>HUY THIEN</span>
+              <small>PIANO · CINEMATIC EXPERIENCE</small>
+            </div>
+
+            <button
+              type="button"
+              id="cinematicExit"
+              class="cinematic-exit"
+              aria-label="Thoát chế độ điện ảnh"
+              tabindex="-1"
+            >
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              <span>EXIT EXPERIENCE</span>
+            </button>
+          </div>
+
+          <div class="cinematic-bottom">
+            <span class="cinematic-line"></span>
+            <p>"Âm nhạc có thể diễn đạt những điều mà lời nói không thể diễn tả." - Victor Hugo</p>
+            <small>DRAG TO EXPLORE · ESC TO EXIT</small>
+          </div>
+        </div>
+         
+        </div>
+
+        <div class="moment-tabs" role="group" aria-label="Chọn khoảnh khắc trong ngày" data-reveal>
+          <button type="button" class="moment-tab" data-moment="morning" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="4"/></svg><span>Sáng sớm</span></button>
+          <button type="button" class="moment-tab" data-moment="rainy" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 19v2M8 13v2M16 19v2M16 13v2M12 21v2M12 15v2M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg><span>Chiều mưa</span></button>
+          <button type="button" class="moment-tab" data-moment="sunset" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 18a5 5 0 0 0-10 0M12 2v7M4.22 10.22l1.42 1.42M1 18h2M21 18h2M18.36 11.64l1.42-1.42M23 22H1M8 6l4-4 4 4"/></svg><span>Hoàng hôn</span></button>
+          <button type="button" class="moment-tab" data-moment="night" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path d="M19 3v4M17 5h4"/></svg><span>Đêm khuya</span></button>
+        </div>
+
+        <div class="moment-caption" data-reveal>
+          <div>
+            <h3 id="momentTitle">Sáng sớm tinh mơ</h3>
+            <p id="momentText" aria-live="polite"></p>
+          </div>
+          <button type="button" class="text-link" id="momentSongs">Xem những bản nhạc cho khoảnh khắc này <span class="ar" aria-hidden="true"></span></button>
         </div>
       </div>
     </section>
 
-    <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><div class="container contact-inner" data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> 05 / KẾT NỐI <span class="eyebrow-line"></span></p><h2 class="section-title" id="contact-title">Âm nhạc kết nối <em>chúng ta</em></h2><p>Cảm ơn bạn đã ghé thăm không gian nhỏ này. 
-       </p><div class="social-links"><a href="https://www.facebook.com/share/1EKw3BRnVE/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i> Facebook <span aria-hidden="true">↗</span></a><a href="https://instagram.com/huythienpia_0710" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram <span aria-hidden="true">↗</span></a></div></div></section>
+    <section class="mailbox-section section-pad" id="mailbox" aria-labelledby="mailbox-title">
+      <div class="container">
+        <div class="section-heading centered" data-reveal>
+          <p class="eyebrow"><span class="eyebrow-line"></span> 05 / HỘP THƯ GIAI ĐIỆU <span class="eyebrow-line"></span></p>
+          <h2 class="section-title" id="mailbox-title">Gửi một bản nhạc cho <em>Huy Thiên</em></h2>
+          <p>Kể mình nghe tâm trạng của bạn, hoặc một người bạn muốn gửi tặng giai điệu. Mình sẽ chọn một bản nhạc và chơi tặng bạn.</p>
+        </div>
+
+        <div class="mailbox-shell" data-reveal>
+          <div class="mailbox-flap" aria-hidden="true"><span>♬</span></div>
+
+          <form class="mailbox-form" id="mailboxForm">
+            <div class="letter-greeting">
+                <span>PRIVATE CORRESPONDENCE</span>
+                <h3>Gửi Huy Thiên,</h3>
+               
+            </div>
+
+            <fieldset class="mood-fieldset">
+              <legend>Hôm nay bạn đang cảm thấy…</legend>
+              <div class="mood-options">
+                <label class="mood-chip"><input type="radio" name="mood" value="Bình yên" required><span><i aria-hidden="true">☾</i>Bình yên</span></label>
+                <label class="mood-chip"><input type="radio" name="mood" value="Nhớ nhung" required><span><i aria-hidden="true">✧</i>Nhớ nhung</span></label>
+                <label class="mood-chip"><input type="radio" name="mood" value="Hạnh phúc" required><span><i aria-hidden="true">♪</i>Hạnh phúc</span></label>
+                <label class="mood-chip"><input type="radio" name="mood" value="Cần được an ủi" required><span><i aria-hidden="true">♡</i>Cần được an ủi</span></label>
+                <label class="mood-chip"><input type="radio" name="mood" value="Muốn tặng ai đó" required><span><i aria-hidden="true">✦</i>Muốn tặng ai đó</span></label>
+              </div>
+            </fieldset>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="mb-name">Tên của bạn</label>
+                <input type="text" id="mb-name" name="name" maxlength="60" autocomplete="given-name" placeholder="Bạn muốn mình gọi là gì?" required>
+                <small class="field-error" data-error-for="name" role="alert"></small>
+              </div>
+              <div class="field">
+                <label for="mb-song">Bài hát muốn nghe</label>
+                <input type="text" id="mb-song" name="song" maxlength="100" list="mb-song-suggestions" placeholder="Tên bài hát hoặc để mình chọn giúp" required>
+                <datalist id="mb-song-suggestions"></datalist>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mb-message">Lời nhắn gửi đến Thiên</label>
+              <div class="letter-writing">
+
+                  <textarea
+                      id="mb-message"
+                      name="message"
+                      maxlength="500"
+                     
+                      required
+                  ></textarea>
+
+                  <svg
+                      id="writingPen"
+                      class="writing-pen"
+                      viewBox="0 0 90 90"
+                      aria-hidden="true"
+                  >
+                      <path
+                          d="M12 78 Q48 9 81 5 Q86 39 47 58 L30 63Z"
+                          fill="#ac8150"
+                          stroke="#60452f"
+                      />
+                      <path
+                          d="M9 85 L70 17 M31 55 L30 32 M46 40 L45 19
+                            M48 42 L70 39 M32 59 L53 53"
+                          stroke="#60452f"
+                          stroke-width="1.8"
+                          fill="none"
+                      />
+                  </svg>
+
+              </div>
+              <div class="field-foot"><small class="field-error" data-error-for="message" role="alert"></small><small class="char-count" id="mb-count" aria-live="polite">0 / 600</small></div>
+            </div>
+
+            <div class="field">
+              <label for="mb-contact">Cách để mình gửi lại bản đàn</label>
+              <input type="text" id="mb-contact" name="contact" maxlength="100" autocomplete="off" placeholder="Email hoặc tên Instagram / Facebook" required>
+            </div>
+
+            <!-- Chống spam: người thật sẽ không thấy ô này -->
+            <div class="hp-field" aria-hidden="true"><label>Để trống<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+
+            <div class="mailbox-actions">
+              <button type="submit" class="btn btn-gold" id="mb-submit"><i class="fa-regular fa-paper-plane" aria-hidden="true"></i> <span>Gửi vào hộp thư</span></button>
+              <p class="mailbox-status" id="mb-status" role="status" aria-live="polite"></p>
+            </div>
+
+
+          </form>
+
+          <div class="mailbox-success" id="mailboxSuccess" hidden tabindex="-1">
+            <span class="success-mark" aria-hidden="true">♬</span>
+            <h3>Thư của bạn đã đến nơi</h3>
+            <p id="mb-success-text">Cảm ơn bạn đã chia sẻ. Mình sẽ đọc thư và chơi một bản nhạc thật dịu dàng gửi lại bạn.</p>
+            <button type="button" class="text-link" id="mb-again">Gửi thêm một lá thư nữa <span class="ar" aria-hidden="true"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact section-pad" id="contact" aria-labelledby="contact-title"><div class="container contact-inner" data-reveal><p class="eyebrow"><span class="eyebrow-line"></span> 06 / KẾT NỐI <span class="eyebrow-line"></span></p><h2 class="section-title" id="contact-title">Âm nhạc kết nối <em>chúng ta</em></h2><p>Cảm ơn bạn đã ghé thăm không gian nhỏ này. 
+       </p><div class="social-links"><a href="https://www.facebook.com/share/1EKw3BRnVE/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i> Facebook <span class="ar" aria-hidden="true"></span></a><a href="https://instagram.com/huythienpia_0710" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram <span class="ar" aria-hidden="true"></span></a></div></div></section>
   </main>
 
   <footer class="site-footer"><div class="container footer-inner"><a class="footer-brand" href="#home">HUY THIEN <span>PIANO & MUSIC</span></a><p>© 2026 Huy Thiên. Made with Heart and Music <i class="fa-solid fa-heart" aria-hidden="true"></i></p><a href="#top" class="back-to-top" aria-label="Lên đầu trang">↑</a></div></footer>
 
   <div class="modal" id="songModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" aria-label="Đóng danh sách bài hát">×</button><p class="eyebrow">YOUR MUSIC LIBRARY</p><h2 id="modalTitle">Danh sách bài hát</h2><p class="modal-description">Những giai điệu mình yêu thích</p><ul id="songList"></ul></div>
+    <div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" aria-label="Đóng danh sách bài hát">×</button><p class="eyebrow">YOUR MUSIC LIBRARY</p><h2 id="modalTitle">Danh sách bài hát</h2><p class="modal-description" id="modalDesc">Những giai điệu mình yêu thích</p><ul id="songList"></ul></div>
   </div>
 </body>
 </html>
