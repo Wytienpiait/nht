@@ -16,6 +16,561 @@
   <script defer src="script.js"></script>
   <script defer src="piano3d.js"></script>
 </head>
+<style>
+  /* Chọn dấu niêm phong */
+  .seal-picker {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .seal-picker legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .seal-description {
+    margin: 0 0 16px;
+    color: #765c42;
+    font-size: .85rem;
+  }
+
+  .seal-options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .seal-option {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .seal-option input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .seal-choice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 5px;
+    border: 1px solid #b3997370;
+    border-radius: 6px;
+    font-size: .8rem;
+    transition: background .2s, border-color .2s;
+  }
+
+  .seal-option input:checked + .seal-choice {
+    background: #8b463814;
+    border-color: #8b4638;
+    box-shadow: inset 0 0 0 1px #8b4638;
+  }
+
+  .seal-option input:focus-visible + .seal-choice {
+    outline: 2px solid #774032;
+    outline-offset: 4px;
+  }
+
+  .personal-wax {
+    display: inline-grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border: 3px solid #a55041;
+    border-radius: 45% 52% 47% 51% / 51% 44% 54% 47%;
+    background: radial-gradient(
+      circle at 35% 25%,
+      #bb6451,
+      #8d3e32 65%,
+      #642b25
+    );
+    box-shadow:
+      inset 0 0 0 2px #6d2d2866,
+      inset 0 2px 5px #e9947155,
+      0 3px 6px #40201844;
+    color: #f2cf9b;
+    font: 600 20px/1 Georgia, serif;
+    text-shadow: 0 1px 1px #4f211c;
+  }
+
+  .seal-custom {
+    margin-top: 16px;
+  }
+
+  .seal-custom label,
+  .seal-custom small {
+    display: block;
+    margin-bottom: 7px;
+  }
+
+  .seal-custom input {
+    max-width: 180px;
+  }
+
+  .seal-custom[hidden],
+  .letter-send-scene[hidden],
+  #mailboxForm[hidden] {
+    display: none;
+  }
+
+  /* Cảnh gửi thư */
+  #mailboxForm.is-folding {
+    visibility: hidden;
+  }
+
+  .letter-send-scene {
+    position: absolute;
+    inset: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .letter-send-title {
+    margin: 0 0 25px;
+    color: #68482f;
+    font: italic clamp(1.4rem, 4vw, 1.9rem)
+      Georgia, serif;
+  }
+
+  .letter-send-caption {
+    margin: 24px 0 0;
+    color: #76543a;
+    font-size: .88rem;
+  }
+
+  .letter-envelope {
+    position: relative;
+    width: min(320px, 100%);
+    height: 300px;
+    perspective: 1000px;
+    isolation: isolate;
+  }
+
+  .letter-envelope-back {
+    position: absolute;
+    inset: 125px 0 10px;
+    border-radius: 4px;
+    background: #b89460;
+    box-shadow: 0 18px 35px #50361b33;
+  }
+
+  .letter-paper {
+    position: absolute;
+    top: 8px;
+    left: 9%;
+    z-index: 2;
+    width: 82%;
+    height: 230px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #cfb78e;
+    background:
+      repeating-linear-gradient(
+        transparent 0 25px,
+        #b28a571c 26px 27px
+      ),
+      #f9efd9;
+    box-shadow: 0 3px 12px #50361b22;
+    transform-origin: center 65%;
+    text-align: left;
+  }
+
+  .letter-paper > span {
+    color: #68482f;
+    font: italic 17px Georgia, serif;
+  }
+
+  .letter-paper p {
+    max-height: 100px;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    color: #80644b;
+    font: italic 13px/1.9 Georgia, serif;
+  }
+
+  .letter-paper-fold {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    height: 50%;
+    border: 1px solid #cfb78e;
+    background: linear-gradient(#f3e6ca, #e6d3ad);
+    transform: rotateX(-180deg);
+    transform-origin: top;
+    backface-visibility: hidden;
+  }
+
+  .letter-envelope-front {
+    position: absolute;
+    inset: 125px 0 10px;
+    z-index: 3;
+    border-radius: 0 0 4px 4px;
+    background: linear-gradient(145deg, #e2c899, #c9a775);
+    clip-path: polygon(
+      0 0, 50% 48%, 100% 0, 100% 100%, 0 100%
+    );
+  }
+
+  .letter-envelope-lid {
+    position: absolute;
+    top: 126px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: 100px;
+    background: linear-gradient(#d7b983, #e9d2a7);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform: rotateX(180deg);
+    transform-origin: top;
+  }
+
+  .letter-envelope-seal {
+    position: absolute;
+    top: 196px;
+    left: calc(50% - 27px);
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-60px) scale(1.8);
+  }
+
+  .is-playing .letter-paper-fold {
+    animation: personal-fold .85s ease-in-out forwards;
+  }
+
+  .is-playing .letter-paper {
+    animation: personal-tuck 1.9s ease-in-out forwards;
+  }
+
+  .is-playing .letter-envelope-lid {
+    animation: personal-close .65s 1.85s ease-in-out forwards;
+  }
+
+  .is-playing .letter-envelope-seal {
+    animation: personal-stamp .65s 2.5s ease-out forwards;
+  }
+
+  #mailboxSuccess .success-mark.personal-wax {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 24px;
+    font-size: 24px;
+    animation: none;
+  }
+
+  @keyframes personal-fold {
+    to { transform: rotateX(0); }
+  }
+
+  @keyframes personal-tuck {
+    0%, 42% {
+      transform: translateY(0);
+    }
+    62% {
+      transform: translateY(-15px) scaleY(.55);
+    }
+    100% {
+      transform: translateY(96px) scaleY(.45);
+    }
+  }
+
+  @keyframes personal-close {
+    from {
+      z-index: 4;
+      transform: rotateX(180deg);
+    }
+    to {
+      z-index: 4;
+      transform: rotateX(0);
+    }
+  }
+
+  @keyframes personal-stamp {
+    0% {
+      opacity: 0;
+      transform: translateY(-60px) scale(1.8);
+    }
+    55% {
+      opacity: 1;
+      transform: scale(.9);
+    }
+    80% {
+      transform: scale(1.06);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (max-width: 430px) {
+    .seal-options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seal-choice {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  function initPersonalSeal() {
+    const form = document.getElementById('mailboxForm');
+    if (!form || document.getElementById('personalSealPicker')) return;
+
+    const shell = form.closest('.mailbox-shell');
+    const actions = form.querySelector('.mailbox-actions');
+    const submit = document.getElementById('mb-submit');
+    if (!shell || !actions || !submit) return;
+
+    const picker = document.createElement('fieldset');
+    picker.id = 'personalSealPicker';
+    picker.className = 'seal-picker';
+
+    picker.innerHTML = `
+      <legend>Chọn dấu niêm phong của bạn</legend>
+      <p class="seal-description">
+        Một dấu ấn nhỏ, dành riêng cho lá thư này.
+      </p>
+      <div class="seal-options">
+        <label class="seal-option">
+          <input type="radio" name="seal"
+            value="Nốt nhạc" data-symbol="♬" checked>
+          <span class="seal-choice">
+            <span class="personal-wax" aria-hidden="true">♬</span>
+            <span>Nốt nhạc</span>
+          </span>
+        </label>
+
+        <label class="seal-option">
+          <input type="radio" name="seal"
+            value="Trái tim" data-symbol="♥">
+          <span class="seal-choice">
+            <span class="personal-wax" aria-hidden="true">♥</span>
+            <span>Trái tim</span>
+          </span>
+        </label>
+
+        <label class="seal-option">
+          <input type="radio" name="seal"
+            value="Ngôi sao" data-symbol="✦">
+          <span class="seal-choice">
+            <span class="personal-wax" aria-hidden="true">✦</span>
+            <span>Ngôi sao</span>
+          </span>
+        </label>
+
+        <label class="seal-option">
+          <input type="radio" name="seal"
+            value="Chữ riêng" data-symbol="HT">
+          <span class="seal-choice">
+            <span class="personal-wax"
+              id="personalSealPreview" aria-hidden="true">HT</span>
+            <span>Chữ riêng</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="seal-custom" id="personalSealCustom" hidden>
+        <label for="personalSealText">Chữ trên con dấu</label>
+        <input id="personalSealText" name="seal_initials"
+          type="text" maxlength="4" placeholder="VD: HT"
+          autocomplete="off" disabled>
+        <small>Tối đa 4 ký tự, ví dụ tên viết tắt của bạn.</small>
+      </div>
+
+      <input type="hidden" name="seal_symbol"
+        id="personalSealSymbol" value="♬">
+    `;
+
+    actions.before(picker);
+
+    const scene = document.createElement('div');
+    scene.className = 'letter-send-scene';
+    scene.hidden = true;
+    scene.innerHTML = `
+      <p class="letter-send-title">Gói ghém những tâm tư…</p>
+
+      <div class="letter-envelope" aria-hidden="true">
+        <div class="letter-envelope-back"></div>
+
+        <div class="letter-paper">
+          <span>Gửi Huy Thiên,</span>
+          <p class="letter-excerpt"></p>
+          <div class="letter-paper-fold"></div>
+        </div>
+
+        <div class="letter-envelope-front"></div>
+        <div class="letter-envelope-lid"></div>
+        <span class="personal-wax letter-envelope-seal">♬</span>
+      </div>
+
+      <p class="letter-send-caption"
+        role="status" aria-live="polite" tabindex="-1">
+        Đang gấp lá thư của bạn…
+      </p>
+    `;
+    shell.append(scene);
+
+    const customField = document.getElementById('personalSealCustom');
+    const customText = document.getElementById('personalSealText');
+    const preview = document.getElementById('personalSealPreview');
+    const symbolInput = document.getElementById('personalSealSymbol');
+    const caption = scene.querySelector('.letter-send-caption');
+
+    function getSymbol() {
+      const selected = picker.querySelector('input[name="seal"]:checked');
+      return selected.value === 'Chữ riêng'
+        ? customText.value.trim() || 'HT'
+        : selected.dataset.symbol;
+    }
+
+    function updateSeal() {
+      const selected = picker.querySelector('input[name="seal"]:checked');
+      const custom = selected.value === 'Chữ riêng';
+
+      customField.hidden = !custom;
+      customText.disabled = !custom;
+      preview.textContent = customText.value.trim() || 'HT';
+      symbolInput.value = getSymbol();
+
+      const topSeal = shell.querySelector('.mailbox-flap span');
+      if (topSeal) topSeal.textContent = getSymbol();
+    }
+
+    picker.addEventListener('change', updateSeal);
+    customText.addEventListener('input', updateSeal);
+    form.addEventListener('reset', () => {
+      setTimeout(updateSeal, 0);
+    });
+
+    let animating = false;
+    let replaySubmit = false;
+
+    const wait = milliseconds =>
+      new Promise(resolve => setTimeout(resolve, milliseconds));
+
+    form.addEventListener('submit', async event => {
+      // Sau hiệu ứng, cho bộ xử lý gửi thư hiện tại hoạt động.
+      if (replaySubmit) {
+        replaySubmit = false;
+        return;
+      }
+
+      if (animating || submit.disabled) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+
+      // Để phần kiểm tra lỗi sẵn có xử lý thư chưa hợp lệ.
+      const name = form.elements.namedItem('name');
+      const message = form.elements.namedItem('message');
+      const trap = form.elements.namedItem('_gotcha');
+
+      if (
+        !form.checkValidity() ||
+        !name?.value.trim() ||
+        (message?.value.trim().length || 0) < 10 ||
+        trap?.value
+      ) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      animating = true;
+      updateSeal();
+
+      const symbol = getSymbol();
+      scene.querySelector('.letter-envelope-seal').textContent = symbol;
+      scene.querySelector('.letter-excerpt').textContent =
+        message.value.slice(0, 110);
+
+      const reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      const previousFocus = document.activeElement;
+
+      try {
+        if (!reduceMotion) {
+          form.inert = true;
+          form.classList.add('is-folding');
+          scene.hidden = false;
+
+          caption.textContent = 'Đang gấp lá thư của bạn…';
+          caption.focus({ preventScroll: true });
+
+          // Bắt đầu lại hiệu ứng cho mỗi lá thư.
+          scene.classList.remove('is-playing');
+          void scene.offsetWidth;
+          scene.classList.add('is-playing');
+
+          await wait(900);
+          caption.textContent = 'Đặt tâm tư vào phong bì…';
+
+          await wait(1150);
+          caption.textContent = 'Đóng dấu niêm phong của bạn…';
+
+          await wait(1150);
+        }
+
+        const successSeal = document.querySelector(
+          '#mailboxSuccess .success-mark'
+        );
+        if (successSeal) {
+          successSeal.textContent = symbol;
+          successSeal.classList.add('personal-wax');
+        }
+      } finally {
+        scene.hidden = true;
+        scene.classList.remove('is-playing');
+        form.classList.remove('is-folding');
+        form.inert = false;
+        animating = false;
+
+        if (previousFocus?.isConnected) {
+          previousFocus.focus({ preventScroll: true });
+        }
+      }
+
+      // Gửi bằng Formspree và xử lý thành công/lỗi
+      // thông qua script.js hiện tại của web.
+      replaySubmit = true;
+      try {
+        form.requestSubmit(submit);
+      } finally {
+        replaySubmit = false;
+      }
+    }, true);
+
+    updateSeal();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded', initPersonalSeal, { once: true }
+    );
+  } else {
+    initPersonalSeal();
+  }
+})();
+</script>
 <body>
   <a class="skip-link" href="#main">Bỏ qua menu</a>
   <header class="site-header" id="top">
@@ -455,7 +1010,7 @@
 
           <div class="session-footer">
               LIVE 3D PIANO PERFORMANCE
-              <small>Digital piano · Made by</small>
+              <small>Digital piano · Made by Huy Thiên</small>
           </div>
 
       </div>
@@ -483,11 +1038,11 @@
                 Có những cảm xúc thật khó để gọi thành tên,
                 có những tâm tư chẳng dễ dàng nói thành lời.
                 Nếu bạn đang mang trong lòng một niềm vui,
-                một nỗi buồn, một câu chuyện hay những tình cảm
+                một nỗi buồn, một câu chuyện nào đó hoặc những tình cảm
                 chưa từng thổ lộ, hãy gửi chúng vào chiếc hộp thư
-                nhỏ này. Mình sẽ lắng nghe, lựa chọn một giai điệu
-                phù hợp và gửi lại bạn bằng những giai điệu Piano,
-                như một lời hồi đáp bằng âm nhạc.
+                nhỏ nhắn này. Mình sẽ lắng nghe, lựa chọn một giai điệu
+                phù hợp và gửi lại bạn bằng những giai điệu Piano do chính mình đánh,
+                như một lời hồi đáp bằng âm nhạc, qua đó có thể chia sẻ cảm xúc cùng bạn.
             </p>
 
         </div>
@@ -501,7 +1056,7 @@
             <form class="mailbox-form" id="mailboxForm">
 
                 <div class="letter-greeting">
-                    <span>PRIVATE CORRESPONDENCE</span>
+                    <span>Hãy chia sẻ nỗi lòng của bạn</span>
                     <h3>Gửi Huy Thiên,</h3>
                 </div>
 
@@ -518,7 +1073,7 @@
                         name="name"
                         maxlength="60"
                         autocomplete="given-name"
-                        placeholder="Bạn muốn mình gọi là gì?"
+                        placeholder="Bạn muốn mình gọi là gì ?"
                         required
                     >
 
@@ -533,7 +1088,7 @@
 
                 <div class="field">
                     <label for="mb-message">
-                        Lời nhắn gửi đến Thiên
+                       Hãy kể mình nghe câu chuyện của bạn...
                     </label>
 
                     <div class="letter-writing">
@@ -542,7 +1097,7 @@
                             id="mb-message"
                             name="message"
                             maxlength="600"
-                            placeholder="Hãy kể mình nghe câu chuyện của bạn..."
+
                             required
                         ></textarea>
 
@@ -593,7 +1148,7 @@
                 <div class="field">
 
                     <label for="mb-contact">
-                        Cách để mình gửi lại bản đàn
+                        Cách để mình gửi lại bản nhạc
                     </label>
 
                     <input
